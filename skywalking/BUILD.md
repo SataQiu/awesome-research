@@ -4,7 +4,7 @@
 
 ### 编译步骤
 
-1.  安装 git、JDK8 以及 maven3
+1. 安装 git、JDK8 以及 maven3
 1. `git clone https://github.com/apache/skywalking.git`
 1. `cd skywalking/`
 1. `git checkout v6.0.0-GA`
