@@ -12,4 +12,4 @@ docker run -d --name elasticsearch --net host -p 9200:9200 -p 9300:9300 -e "disc
 
 之后，ES 服务就会在宿主机的 9200 端口开始监听了（9300 是集群管理端口，默认只绑定 127.0.0.1）。
 
-![ElasticSearch](elasticsearch.png)
+![elasticsearch-preview](https://github.com/SataQiu/awesome-research/blob/master/images/elasticsearch-preview.png)
