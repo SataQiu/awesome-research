@@ -18,9 +18,9 @@ docker run -d --name elasticsearch --net host -p 9200:9200 -p 9300:9300 -e "disc
 
 **开放 9300 端口的方法如下：**
 
-1.  编写 ElasticSearch 配置文件 build/elasticsearch.yml
+1.  编写 ElasticSearch 配置文件 `build/elasticsearch.yml`
 
-    ```yaml
+    ```yml
     cluster.name: elasticsearch
     transport.host: 0.0.0.0
     http.host: 0.0.0.0
@@ -31,7 +31,7 @@ docker run -d --name elasticsearch --net host -p 9200:9200 -p 9300:9300 -e "disc
     #discovery.zen.minimum_master_nodes: 1
     ```
 
-1.  编写 Dockerfile build/Dockerfile
+1.  编写 Dockerfile `build/Dockerfile`
 
     ```Dockerfile
     FROM elasticsearch:5.6.4
