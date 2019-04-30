@@ -823,3 +823,27 @@ time: Mon Apr 29 18:02:12 2019
 elapsed time: 17 seconds
 ```
 
+### 2. JDk 版本问题
+
+使用 Ubuntu、jdk 11.0.2 时：
+
+skywalking `collector.log`:
+
+```sh
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.esotericsoftware.reflectasm.AccessClassLoader (file:/opt/skywalking/skywalking/apache-skywalking-apm-incubating-5.0.0-GA/collector-libs/reflectasm-1.11.3.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.esotericsoftware.reflectasm.AccessClassLoader
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+```
+Ref: https://github.com/apache/skywalking/issues/2507
+
+该问题会导致 Service 端点无法正常采集。
+
+**解决方案：** 使用 **JDK8**，不要轻易使用高版本 JDK
+
+```sh
+java version "1.8.0_202"
+Java(TM) SE Runtime Environment (build 1.8.0_202-b08)
+Java HotSpot(TM) 64-Bit Server VM (build 25.202-b08, mixed mode)
+```
