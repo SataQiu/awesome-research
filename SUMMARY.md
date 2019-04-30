@@ -5,6 +5,7 @@
     * [源码编译](skywalking/BUILD.md)
     * [系统部署](skywalking/DEPLOY.md)
     * [存储支持](skywalking/STORAGE.md)
+    * [问题记录](skywalking/BUGREPORT.md)
 * [SpringCloud](springcloud/README.md)
     * [网关示例](springcloud/GATEWAY.md)
 * [ElasticSearch](elasticsearch/README.md)
