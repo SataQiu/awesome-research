@@ -7,3 +7,5 @@
     * [存储支持](skywalking/STORAGE.md)
 * [SpringCloud](springcloud/README.md)
     * [源码编译](springcloud/GATEWAY.md)
+* [ElasticSearch](elasticsearch/README.md)
+    * [快速部署](elasticsearch/QUICKSTART.md)
