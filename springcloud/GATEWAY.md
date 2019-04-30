@@ -37,26 +37,8 @@ Spring Cloud Gateway 是基于 Spring MVC 实现的 API 网关，它提供一种
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-gateway</artifactId>
             </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>spring-boot-starter-web</artifactId>
-                        <groupId>org.springframework.boot</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <scope>test</scope>
-            </dependency>
         </dependencies>
+
         <build>
             <plugins>
                 <plugin>
@@ -66,80 +48,47 @@ Spring Cloud Gateway 是基于 Spring MVC 实现的 API 网关，它提供一种
             </plugins>
         </build>
     ```
+
 1.  编辑 Application.java
 
     ```java
-    package org.shida.SpringGW;
 
     import reactor.core.publisher.Mono;
 
     import org.springframework.boot.SpringApplication;
     import org.springframework.boot.autoconfigure.SpringBootApplication;
-    import org.springframework.boot.context.properties.ConfigurationProperties;
-    import org.springframework.boot.context.properties.EnableConfigurationProperties;
     import org.springframework.cloud.gateway.route.RouteLocator;
     import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
     import org.springframework.context.annotation.Bean;
     import org.springframework.web.bind.annotation.RequestMapping;
     import org.springframework.web.bind.annotation.RestController;
 
-    // tag::code[]
     @SpringBootApplication
-    @EnableConfigurationProperties(UriConfiguration.class)
     @RestController
-    public class SpringGwApplication {
+    public class Application {
 
         public static void main(String[] args) {
-            SpringApplication.run(SpringGwApplication.class, args);
+            SpringApplication.run(Application.class, args);
         }
 
-        // tag::route-locator[]
         @Bean
-        public RouteLocator myRoutes(RouteLocatorBuilder builder, UriConfiguration uriConfiguration) {
-            String httpUri = uriConfiguration.getHttpbin();
+        public RouteLocator myRoutes(RouteLocatorBuilder builder) {
+            String httpUri = "http://httpbin.org:80";
             return builder.routes()
-                .route(p -> p
-                    .path("/get")
+                    .route(p -> p.path("/get")
                     .filters(f -> f.addRequestHeader("Hello", "World"))
-                    .uri(httpUri))
-                .route(p -> p
-                    .host("*.hystrix.com")
-                    .filters(f -> f
-                        .hystrix(config -> config
-                            .setName("mycmd")
-                            .setFallbackUri("forward:/fallback")))
-                    .uri(httpUri))
-                .build();
+                    .uri(httpUri)).build();
         }
-        // end::route-locator[]
 
-        // tag::fallback[]
         @RequestMapping("/fallback")
         public Mono<String> fallback() {
             return Mono.just("fallback");
         }
-        // end::fallback[]
-    }
-
-    // tag::uri-configuration[]
-    @ConfigurationProperties
-    class UriConfiguration {
-        
-        // http://httpbin.org:80 是 Spring 提供的公网服务
-        private String httpbin = "http://httpbin.org:80";
-
-        public String getHttpbin() {
-            return httpbin;
-        }
-
-        public void setHttpbin(String httpbin) {
-            this.httpbin = httpbin;
-        }
     }
     ```
 
-1.  运行 Application.java
-1.  访问 `http://localhost:8081/get`
+2.  运行 Application.java
+3.  访问 `http://localhost:8081/get`
 
     ```sh
     {
@@ -160,3 +109,5 @@ Spring Cloud Gateway 是基于 Spring MVC 实现的 API 网关，它提供一种
     "url": "https://localhost:8081/get"
     }
     ```
+
+附项目地址：https://github.com/SataQiu/springcloudgateway-demo
