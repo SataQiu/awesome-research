@@ -12,7 +12,7 @@ docker run -d --name elasticsearch --net host -p 9200:9200 -p 9300:9300 -e "disc
 
 之后，ES 服务就会在宿主机的 9200 端口开始监听了。
 
-![elasticsearch](https://raw.githubusercontent.com/SataQiu/awesome-research/master/images/elasticsearch-preview.png)
+<img src="https://raw.githubusercontent.com/SataQiu/awesome-research/master/images/elasticsearch-preview.png" width = "400" div align=center /><br/>
 
 不过默认条件下，9300 端口未对外开发，对于某些服务会造成影响。
 
@@ -31,7 +31,7 @@ docker run -d --name elasticsearch --net host -p 9200:9200 -p 9300:9300 -e "disc
     #discovery.zen.minimum_master_nodes: 1
     ```
 
-1.  编写 Dockerfile build/Dockerfile
+2.  编写 Dockerfile build/Dockerfile
 
     ```Dockerfile
     FROM elasticsearch:5.6.4
@@ -41,21 +41,21 @@ docker run -d --name elasticsearch --net host -p 9200:9200 -p 9300:9300 -e "disc
     EXPOSE 9200 9300
     ```
 
-1.  编译镜像
+3.  编译镜像
 
     ```sh
     # cd build
     # docker build -t elasticsearch:5.6.4-custom .
     ```
 
-1.  在正式运行之前需要检查主机配置（`/etc/sysctl.conf`）
+4.  在正式运行之前需要检查主机配置（`/etc/sysctl.conf`）
     确保包含如下配置：
 
     ```sh
     vm.max_map_count=262144
     ```
 
-1. 运行镜像
+5. 运行镜像
 
     ```sh
     # docker run -d --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:5.6.4-custom
@@ -72,4 +72,4 @@ docker run -d --name elasticsearch --net host -p 9200:9200 -p 9300:9300 -e "disc
 
    - [sense-chrome-plugin](https://chrome.google.com/webstore/detail/elasticsearch-toolbox/focdbmjgdonlpdknobfghplhmafpgfbp?hl=zh_CN)
 
-    ![sense](https://raw.githubusercontent.com/SataQiu/awesome-research/master/images/elasticsearch-sense.jpg)
+    <img src="https://raw.githubusercontent.com/SataQiu/awesome-research/master/images/elasticsearch-sense.jpg" width = "800" div align=center /><br/>
