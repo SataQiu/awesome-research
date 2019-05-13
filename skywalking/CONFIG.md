@@ -183,7 +183,7 @@ receiver_jaeger:
     gRPCHost: ${SW_RECEIVER_JAEGER_HOST:0.0.0.0}
     gRPCPort: ${SW_RECEIVER_JAEGER_PORT:14250}
 
-# 
+# 查询语言配置
 query:
   graphql:
     path: ${SW_QUERY_GRAPHQL_PATH:/graphql}
