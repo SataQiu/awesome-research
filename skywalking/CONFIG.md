@@ -320,6 +320,6 @@ logging.level=${SW_LOGGING_LEVEL:DEBUG}
 #### 附加信息
 
 - OAP 支持三种启动模式：
-  * Default Mode：初始化 -> 运行 (/bin/oapService.sh、startup.sh)
+  * Default Mode：初始化 -> 运行 (/bin/oapService.sh、/startup.sh)
   * Init Mode：单实例初始化 -> 运行 (/bin/oapServiceInit.sh)
   * No-init Mode：直接运行 (/bin/oapServiceNoInit.sh)
