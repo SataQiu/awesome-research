@@ -1,6 +1,8 @@
 # 配置解读
 
-以 6.0.0-GA 版本配置为例：
+以 6.1.0 版本配置为例（**[6.1.0](https://github.com/apache/skywalking/releases/tag/v6.1.0) 增加了很多新的功能特性**）
+
+`application.yml`
 
 ```yaml
 # 集群配置：配置 OAP Server 的运行模式(单节点/集群)
@@ -197,26 +199,127 @@ telemetry:
   prometheus:
     host: ${SW_TELEMETRY_PROMETHEUS_HOST:0.0.0.0}
     port: ${SW_TELEMETRY_PROMETHEUS_PORT:1234}
-
-# Prometheus exporter
-exporter:
-  grpc:
-    targetHost: ${SW_EXPORTER_GRPC_HOST:127.0.0.1}
-    targetPort: ${SW_EXPORTER_GRPC_PORT:9870}
 ```
 
-#### 最佳实践
+`alarm-settings.yml`
 
-- 所有配置项都可以通过环境变量覆盖，这给容器化启动的动态配置带来了便利；
-- 所有配置项都可以通过传参进行覆盖，例如：`-Dcore.default.restHost=172.0.4.12`；
-- 多实例并发操作 ES 时，为避免 ES 操作阻塞，启动时请使用 Init Mode (oapServiceInit.sh)，
-  该模式会只启动一个示例做数据初始化工作，初始化完成后，该 Init 实例退出，启动多个真正的工作实例；
-- 生产环境建议配置为集群模式，以提供高吞吐量和 HA 支持
+```yaml
+# 定义告警规则
+rules:
+  # Rule unique name, must be ended with `_rule`.
+  service_resp_time_rule:
+    # 指标名称
+    indicator-name: service_resp_time
+    op: ">"
+    threshold: 1000
+    period: 10
+    count: 3
+    silence-period: 5
+    message: Response time of service {name} is more than 1000ms in 3 minutes of last 10 minutes.
+  service_sla_rule:
+    # Indicator value need to be long, double or int
+    indicator-name: service_sla
+    op: "<"
+    threshold: 8000
+    # The length of time to evaluate the metric
+    period: 10
+    # How many times after the metric match the condition, will trigger alarm
+    count: 2
+    # How many times of checks, the alarm keeps silence after alarm triggered, default as same as period.
+    silence-period: 3
+    message: Successful rate of service {name} is lower than 80% in 2 minutes of last 10 minutes
+  service_p90_sla_rule:
+    # Indicator value need to be long, double or int
+    indicator-name: service_p90
+    op: ">"
+    threshold: 1000
+    period: 10
+    count: 3
+    silence-period: 5
+    message: 90% response time of service {name} is more than 1000ms in 3 minutes of last 10 minutes
+  service_instance_resp_time_rule:
+    indicator-name: service_instance_resp_time
+    op: ">"
+    threshold: 1000
+    period: 10
+    count: 2
+    silence-period: 5
+    message: Response time of service instance {name} is more than 1000ms in 2 minutes of last 10 minutes
+#  Active endpoint related metric alarm will cost more memory than service and service instance metric alarm.
+#  Because the number of endpoint is much more than service and instance.
+#
+#  endpoint_avg_rule:
+#    indicator-name: endpoint_avg
+#    op: ">"
+#    threshold: 1000
+#    period: 10
+#    count: 2
+#    silence-period: 5
+#    message: Response time of endpoint {name} is more than 1000ms in 2 minutes of last 10 minutes
 
+# 将告警信息发送到 webhook
+webhooks:
+#  - http://127.0.0.1/notify/
+#  - http://127.0.0.1/go-wechat/
+```
+
+`agent.config`
+
+```sh
+# agent 的命名空间，可用于隔离，按 namespace 查看追踪数据
+agent.namespace=${SW_AGENT_NAMESPACE:default-namespace}
+
+# 服务名称，将用于展示和查找
+agent.service_name=${SW_AGENT_NAME:Your_ApplicationName}
+
+# The number of sampled traces per 3 seconds
+# Negative number means sample traces as many as possible, most likely 100%
+# 每 3 秒的采样率
+agent.sample_n_per_3_secs=${SW_AGENT_SAMPLE:-1}
+
+# Authentication active is based on backend setting, see application.yml for more details.
+# agent.authentication = ${SW_AGENT_AUTHENTICATION:xxxx}
+
+# The max amount of spans in a single segment.
+# Through this config item, skywalking keep your application memory cost estimated.
+# 每个 segment 最大的 spans 数量
+agent.span_limit_per_segment=${SW_AGENT_SPAN_LIMIT:300}
+
+# Ignore the segments if their operation names start with these suffix.
+# 忽略列表
+agent.ignore_suffix=${SW_AGENT_IGNORE_SUFFIX:.jpg,.jpeg,.js,.css,.png,.bmp,.gif,.ico,.mp3,.mp4,.html,.svg}
+
+# If true, skywalking agent will save all instrumented classes files in `/debugging` folder.
+# Skywalking team may ask for these files in order to resolve compatible problem.
+# 用于调试
+agent.is_open_debugging_class = ${SW_AGENT_OPEN_DEBUG:true}
+
+# 后端 OAP 地址
+collector.backend_service=${SW_AGENT_COLLECTOR_BACKEND_SERVICES:127.0.0.1:11800}
+
+# 日志级别
+logging.level=${SW_LOGGING_LEVEL:DEBUG}
+```
+
+[**术语解释**]
+
+- OAP: Observability Analysis Platform
+
+#### 配置建议
+
+1. 多实例并发操作 ES 时，可能会引起 ES 索引构建异常（[问题描述](https://github.com/apache/skywalking/blob/master/docs/en/setup/backend/backend-init-mode.md)），建议采用 Init 模式启动 OAP 集群。该模式会只启动一个实例做数据初始化工作，初始化完成后，该 Init 实例退出，然后启动真正的工作集群。附上：[SkyWalking 三种启动模式](https://github.com/apache/skywalking/blob/master/docs/en/setup/backend/backend-start-up-mode.md)
+2. 合理设置分片数量（不大于 ES 集群节点数）和数据备份份数能够降低 ES 压力
+3. 合理降低采样率能降低 ES 和 OAP 压力
+4. 适当调低数据保留的 TTL 时间能够降低 ES 压力
+5. 合理设置并发请求数（在吞吐量和 ES 压力上折中）
+6. 合理限制 ES 查询结果集大小能够提升性能，并降低 ES 压力
+7. 合理使用 namespace 能够对 agent 采样数据进行区域划分
+8. OAP 采用集群模式可提升吞吐量并保证服务高可靠 HA (承载量：吴晟回应 百亿 trace 每天)
+9. 配置项均支持环境变量和 Java 启动参数（-Dxxx=xxx）方式覆盖，应该善加利用
 
 #### 附加信息
 
-- OAP 支持三种启动模式：Default/Init/no-init
-  * Default Mode：初始化 -> 运行 (/bin/oapService.sh、startup.sh)；
-  * Init Mode：单实例初始化 -> 运行 (/bin/oapServiceInit.sh)；
-  * No-init Mode：直接运行 (/bin/oapServiceNoInit.sh)；
+- OAP 支持三种启动模式：
+  * Default Mode：初始化 -> 运行 (/bin/oapService.sh、startup.sh)
+  * Init Mode：单实例初始化 -> 运行 (/bin/oapServiceInit.sh)
+  * No-init Mode：直接运行 (/bin/oapServiceNoInit.sh)
