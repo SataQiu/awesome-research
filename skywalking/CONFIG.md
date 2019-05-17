@@ -323,3 +323,18 @@ logging.level=${SW_LOGGING_LEVEL:DEBUG}
   * Default Mode：初始化 -> 运行 (/bin/oapService.sh、/startup.sh)
   * Init Mode：单实例初始化 -> 运行 (/bin/oapServiceInit.sh)
   * No-init Mode：直接运行 (/bin/oapServiceNoInit.sh)
+
+#### SkyWalking 6 新支持特性
+
+1. 提供 Kubernetes 部署方案
+2. 后端支持采样率设置
+3. 数据库连接指标探测，慢语句检测
+4. 新告警内核
+5. Exporter 对接外部系统（二次分析）
+6. Mysql、TiDB 存储支持（不适合用于生产，仅是响应社区需求）
+7. 支持 Prometheus 监控 SkyWalking
+
+#### SkyWalkingDev 演讲
+
+- 假设你有足够强大的 ES 支持，SkyWalking 的承载量是可观的（永辉已验证，百亿 Trace 每天）
+- 加入 SkyWalking 对原系统性能影响很小
