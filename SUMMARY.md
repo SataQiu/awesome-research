@@ -10,5 +10,6 @@
     * [实验记录](skywalking/EXPERIMENT.md)
 * [SpringCloud](springcloud/README.md)
     * [网关示例](springcloud/GATEWAY.md)
+    * [网关编译](springcloud/GATEWAYBUILD.md)
 * [ElasticSearch](elasticsearch/README.md)
     * [快速部署](elasticsearch/QUICKSTART.md)
