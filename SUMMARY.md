@@ -13,3 +13,4 @@
   * [网关编译](springcloud/gatewaybuild.md)
 * [ElasticSearch](elasticsearch/README.md)
   * [快速部署](elasticsearch/quickstart.md)
+* [加密解密](jia-mi-jie-mi.md)
