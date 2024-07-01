@@ -2,7 +2,7 @@
 
 如何设计一套加密服务？需要一个类似 KMS 的加解密服务以及与之匹配的 SDK。
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption><p>加解密流程示意图</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption><p>加解密流程示意图</p></figcaption></figure>
 
 优点：
 
@@ -20,5 +20,5 @@
 
 如果想采用云原生方式实现 Secret 加密，可以考虑 Kamus 方案，通过 init container 解密数据
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption><p>kamus</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption><p>kamus</p></figcaption></figure>
 
