@@ -15,3 +15,4 @@
   * [快速部署](elasticsearch/quickstart.md)
 * [加密解密](jia-mi-jie-mi.md)
 * [日志采集](ri-zhi-cai-ji.md)
+* [调度器](diao-du-qi.md)
