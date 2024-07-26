@@ -34,53 +34,47 @@ go run main.go
 
 通过 `top` 命令找到 CPU 占用高的进程 ID：
 
-<figure><img src="../../.gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (21).png" alt=""><figcaption></figcaption></figure>
 
-然后，通过 `top -H -p 16901` 查看进程内的线程，找到 CPU 占用高的线程：
+然后，通过 `top -H -p 22706` 查看进程内的线程，找到 CPU 占用高的线程：
 
-<figure><img src="../../.gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (22).png" alt=""><figcaption></figcaption></figure>
 
-这里看到，占用 CPU 较高的线程 ID 是 16903
+这里看到，占用 CPU 较高的线程 ID 是 22710
 
 使用 dlv attach go 程序
 
 ```
-dlv attach 16901
+dlv attach 22706
 ```
 
-<figure><img src="../../.gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
+输入 help 可以查看使用帮助
 
-输入 help 可以查看使用帮助，这里使用 goroutines 命令，查看协程信息：
+<figure><img src="../../.gitbook/assets/image (23).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src="../../.gitbook/assets/image (11).png" alt=""><figcaption></figcaption></figure>
+这里使用 `goroutines` 命令，查看协程信息：
 
-可以看出，16903 正在执行 6 号协程，`goroutine 6`切换到对应协程
+<figure><img src="../../.gitbook/assets/image (24).png" alt=""><figcaption></figcaption></figure>
 
-```
-goroutine 6
-```
-
-<figure><img src="../../.gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
-
-接着，通过 stack 或 bt 命令打印栈信息（注意这会下断点，打断程序执行，执行前做好线上隔离）
-
-<figure><img src="../../.gitbook/assets/image (13).png" alt=""><figcaption></figcaption></figure>
-
-确认是 main.go:29 的 main.Eat 占用 CPU 资源
-
-通过 list 查看相关代码
+可以看出，22710 线程正在执行 5 号协程，`goroutine 5`切换到对应协程
 
 ```
-list main.Eat
+goroutine 5
 ```
 
-<figure><img src="../../.gitbook/assets/image (14).png" alt=""><figcaption></figcaption></figure>
+接着，通过 `stack` 或 `bt` 命令打印栈信息（注意这会下断点，打断程序执行，执行前做好线上隔离）
 
-也可以直接通过 ls 命令快速查看运行的代码（简单快捷）
+<figure><img src="../../.gitbook/assets/image (25).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+通过 `ls` 查看正在执行的代码（ls 也可以查看指的代码，如 `ls main.Eat`）
 
-很明显了，for 循环在占用 CPU。
+```
+ls
+```
+
+<figure><img src="../../.gitbook/assets/image (26).png" alt=""><figcaption></figcaption></figure>
+
+很明显了，for 循环在持续占用 CPU。
 
 最后，执行 `quit` 退出调试，注意选择 `n` 以不杀死进程
 
