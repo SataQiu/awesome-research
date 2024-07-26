@@ -72,7 +72,7 @@ goroutine 6
 
 <figure><img src="../../.gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
 
-接着，通过 `bt` 打印栈信息
+接着，通过 `bt` 打印栈信息（注意这会下断点，打断程序执行，执行前做好线上隔离）
 
 <figure><img src="../../.gitbook/assets/image (13).png" alt=""><figcaption></figcaption></figure>
 
@@ -87,3 +87,8 @@ list main.Eat
 <figure><img src="../../.gitbook/assets/image (14).png" alt=""><figcaption></figcaption></figure>
 
 main.go 的第 29 行，就是 for 循环
+
+最后，执行 `quit` 退出调试，注意选择 `n` 以不杀死进程
+
+<figure><img src="../../.gitbook/assets/image (17).png" alt=""><figcaption></figcaption></figure>
+
