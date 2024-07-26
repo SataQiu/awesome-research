@@ -17,6 +17,8 @@
   * [CPU 调试](golang/cpu-tiao-shi/README.md)
     * [pprof](golang/cpu-tiao-shi/pprof.md)
     * [dlv](golang/cpu-tiao-shi/dlv.md)
+  * [Mem 调试](golang/mem-tiao-shi/README.md)
+    * [pprof](golang/mem-tiao-shi/pprof.md)
 * [加密解密](jia-mi-jie-mi.md)
 * [日志采集](ri-zhi-cai-ji.md)
 * [调度器](diao-du-qi.md)
