@@ -4,7 +4,7 @@
 
 运行如下程序，模拟线上服务：
 
-```
+```go
 package main
 
 import (
