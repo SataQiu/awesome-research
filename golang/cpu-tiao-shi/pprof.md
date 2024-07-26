@@ -50,7 +50,7 @@ go tool pprof http://localhost:6060/debug/pprof/profile
 
 上述命令需要等待一段时间，然后自动转入交互模式：
 
-<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption><p>debug cpu by pprof</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption><p>debug cpu by pprof</p></figcaption></figure>
 
 如上图所述，通过执行 top 查看占用 CPU 最高的部分，通过 list 查看具体代码
 
@@ -93,7 +93,7 @@ func main() {
 
 那么调试结果如下图所示，发现 top 占用是系统调用：
 
-<figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption><p>debug cpu top by traces</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1) (1).png" alt=""><figcaption><p>debug cpu top by traces</p></figcaption></figure>
 
 此时不好直接定位出问题代码，可以通过 traces 查看
 

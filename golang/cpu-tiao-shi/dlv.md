@@ -9,22 +9,12 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
 	"runtime"
-
-	_ "net/http/pprof"
 )
 
 func main() {
 	// 限制 CPU 使用数
 	runtime.GOMAXPROCS(1)
-	// 启动 pprof server
-	go func() {
-		if err := http.ListenAndServe(":6060", nil); err != nil {
-			log.Fatal(err)
-		}
-	}()
 	// 模拟 CPU 高占用
 	go Eat()
 
@@ -72,7 +62,7 @@ goroutine 6
 
 <figure><img src="../../.gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
 
-接着，通过 `bt` 打印栈信息（注意这会下断点，打断程序执行，执行前做好线上隔离）
+接着，通过 stack 或 bt 命令打印栈信息（注意这会下断点，打断程序执行，执行前做好线上隔离）
 
 <figure><img src="../../.gitbook/assets/image (13).png" alt=""><figcaption></figcaption></figure>
 
@@ -86,7 +76,11 @@ list main.Eat
 
 <figure><img src="../../.gitbook/assets/image (14).png" alt=""><figcaption></figcaption></figure>
 
-main.go 的第 29 行，就是 for 循环
+也可以直接通过 ls 命令快速查看运行的代码（简单快捷）
+
+<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+很明显了，for 循环在占用 CPU。
 
 最后，执行 `quit` 退出调试，注意选择 `n` 以不杀死进程
 
